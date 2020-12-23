@@ -1,10 +1,12 @@
 package vn.plusplus.spring.springbootdemo.controller;
 
+import jdk.nashorn.internal.objects.annotations.Getter;
 import org.springframework.web.bind.annotation.*;
 import vn.plusplus.spring.springbootdemo.controller.request.PostRequest;
 import vn.plusplus.spring.springbootdemo.controller.response.GetResponse;
 import vn.plusplus.spring.springbootdemo.controller.response.HomepageResponse;
 import vn.plusplus.spring.springbootdemo.controller.response.Product;
+import vn.plusplus.spring.springbootdemo.services.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/prefix")
 public class RestAPIController {
+
     //Get API
     @RequestMapping(value = "/request-mapping", method = RequestMethod.GET)
     public Object getExample(){
@@ -93,5 +96,10 @@ public class RestAPIController {
                                     @RequestParam(name = "language") String language){
         System.out.println("Getting detail for product Id in params: " + prId + ", language: " + language);
         return "Detail " + prId;
+    }
+    @GetMapping(value = "user")
+    public User getUser(){
+        User user = User.builder().name("kiemnx").mssv("abc").build();
+        return user;
     }
 }
