@@ -1,12 +1,15 @@
 package vn.plusplus.spring.springbootdemo.controller;
 
 import jdk.nashorn.internal.objects.annotations.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import vn.plusplus.spring.springbootdemo.controller.request.PostRequest;
 import vn.plusplus.spring.springbootdemo.controller.response.GetResponse;
 import vn.plusplus.spring.springbootdemo.controller.response.HomepageResponse;
 import vn.plusplus.spring.springbootdemo.controller.response.Product;
-import vn.plusplus.spring.springbootdemo.services.User;
+import vn.plusplus.spring.springbootdemo.services.RestAPIService;
+import vn.plusplus.spring.springbootdemo.services.RestService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +18,19 @@ import java.util.List;
 @RequestMapping(value = "/prefix")
 public class RestAPIController {
 
+    @Autowired
+    RestService restService;
+
+    @Autowired
+    RestAPIService apiService;
+
+    @Value("${out_folder_path}")
+    private String folderOut;
+
     //Get API
     @RequestMapping(value = "/request-mapping", method = RequestMethod.GET)
     public Object getExample(){
-        GetResponse response = new GetResponse();
+        GetResponse response = apiService.getResponse();
         return response;
     }
 
@@ -97,9 +109,9 @@ public class RestAPIController {
         System.out.println("Getting detail for product Id in params: " + prId + ", language: " + language);
         return "Detail " + prId;
     }
-    @GetMapping(value = "user")
-    public User getUser(){
-        User user = User.builder().name("kiemnx").mssv("abc").build();
-        return user;
+    @GetMapping(value = "/rest-template")
+    public String getUser(){
+        restService.getAPIUsingRestTemplate();
+        return "OK";
     }
 }

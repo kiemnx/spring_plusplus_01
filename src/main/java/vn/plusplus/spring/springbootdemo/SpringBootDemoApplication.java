@@ -11,5 +11,4 @@ public class SpringBootDemoApplication {
 		SpringApplication.run(SpringBootDemoApplication.class, args);
 		System.out.println("Started Spring Boot App");
 	}
-
 }
