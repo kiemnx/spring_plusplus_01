@@ -1,9 +1,11 @@
 package vn.plusplus.spring.springbootdemo.services;
 
-import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import vn.plusplus.spring.springbootdemo.repository.StudentRepository;
 import vn.plusplus.spring.springbootdemo.repository.entity.StudentEntity;
 
+import javax.transaction.Transactional;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -12,6 +14,10 @@ import java.util.List;
 
 @Service
 public class StudentService {
+
+    @Autowired
+    StudentRepository studentRepository;
+
     public List<StudentEntity> getAllStudentById(String id, Connection connection) throws Exception{
         String query = "SELECT * FROM student WHERE idNumber='" + id+"' LIMIT 10";
         Statement statement = connection.createStatement();
@@ -42,4 +48,14 @@ public class StudentService {
         }
         return students;
     }
+
+    @Transactional
+    public String changeStudentError(Integer id){
+        StudentEntity st = studentRepository.findOneById(id);
+        st.setStudentName("KIEMNX");
+        studentRepository.save(st);
+        throw new RuntimeException("Error");
+    }
+
+
 }
