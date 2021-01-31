@@ -1,5 +1,6 @@
 package vn.plusplus.spring.springbootdemo.repository;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,6 +13,9 @@ import java.util.List;
 
 @Repository
 public interface StudentRepository extends JpaRepository<StudentEntity, Integer> {
+
+    List<StudentEntity> findAllByAge(Integer age, Pageable pageable);
+
     List<StudentEntity> findAllByStudentIdNumber(String id);
     List<StudentEntity> findAllByAge(Integer age);
     List<StudentEntity> findAllByStudentName(String name);
@@ -57,4 +61,6 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
     @Modifying
     @Query(nativeQuery = true, value = "UPDATE student SET age = ?1 WHERE id = ?2")
     int updateUsingNativeModify(Integer age, Integer id);
+
+
 }

@@ -1,6 +1,8 @@
 package vn.plusplus.spring.springbootdemo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import vn.plusplus.spring.springbootdemo.controller.request.StudentRequest;
 import vn.plusplus.spring.springbootdemo.repository.StudentRepository;
@@ -96,11 +98,25 @@ public class StudentController {
         return null;
     }
 
-    @GetMapping(value = "/test")
+    @GetMapping(value = "/update-with-transaction")
     public String changeStudentError(){
         return studentService.changeStudentError(1);
     }
 
+    @GetMapping(value = "/findAll/{age}")
+    public List<StudentEntity> findAll(@PathVariable(name = "age") Integer age,
+                                       @RequestParam(name = "page") Integer pageNum,
+                                       @RequestParam(name = "size") Integer pageSize,
+                                       @RequestParam(name = "sortBy") String sortBy,
+                                       @RequestParam(name = "orderBy") String orderBy){
+        Sort sort = Sort.by(Sort.Direction.ASC, sortBy);
+        if(orderBy.equals("DESC")) {
+            sort = Sort.by(Sort.Direction.DESC, sortBy);
+        }
+        PageRequest pageRequest = PageRequest.of(pageNum, pageSize, sort);
+        List<StudentEntity> response = studentRepository.findAllByAge(age, pageRequest);
+        return response;
+    }
 
     /*Connection getConnection(){
         if(connection == null){

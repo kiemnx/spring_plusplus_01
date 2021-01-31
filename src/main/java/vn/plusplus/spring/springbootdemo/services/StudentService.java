@@ -52,7 +52,7 @@ public class StudentService {
     @Transactional
     public String changeStudentError(Integer id){
         StudentEntity st = studentRepository.findOneById(id);
-        st.setStudentName("KIEMNX");
+        st.setStudentName("PLUSPLUS");
         studentRepository.save(st);
         throw new RuntimeException("Error");
     }
