@@ -78,10 +78,24 @@ public class StudentController {
         return studentEntity;
     }
 
+    @DeleteMapping(value = "/deleteOne/{studentId}")
+    public String deleteOne(@PathVariable(name = "studentId") Integer studentId) {
+        StudentEntity studentEntity = studentRepository.findOneById(studentId);
+        if (studentEntity == null) {
+            System.out.println("Student with ID " + studentId + " is not existed");
+            return null;
+        }
+        studentRepository.delete(studentEntity);
+        return "DONE";
+    }
     @GetMapping(value = "/query/{studentId}")
     public StudentEntity findStudentById(@PathVariable(name = "studentId") Integer id){
         StudentEntity st1 = studentRepository.findStudentByIdNativeIndexed(id);
-        Object[] st2 = studentRepository.findStudentByIdNativeIndexed2(id);
+        List<Object[]> st2 = studentRepository.findStudentByIdNativeIndexed2(id);
+        Object[] item1 = st2.get(0);
+        String name = String.valueOf(item1[0]);
+        Integer age = (int)item1[1];
+        System.out.println(name + ":" + age);
         StudentEntity st3 = studentRepository.findStudentByIdJPQL(id);
 
         StudentEntity st4 = studentRepository.findStudentByIdNativeNamed(id);
