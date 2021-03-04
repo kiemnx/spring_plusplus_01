@@ -28,7 +28,7 @@ public class MainController {
     @Value("${error.message}")
     private String errorMessage;
 
-    @GetMapping(value = { "/", "/index" })
+//    @GetMapping(value = { "/", "/index" })
     public String index(Model model) {
 
         model.addAttribute("message", message);
