@@ -1,6 +1,8 @@
 package vn.plusplus.spring.springbootdemo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import vn.plusplus.spring.springbootdemo.controller.request.StudentRequest;
 import vn.plusplus.spring.springbootdemo.repository.StudentRepository;
@@ -76,10 +78,24 @@ public class StudentController {
         return studentEntity;
     }
 
+    @DeleteMapping(value = "/deleteOne/{studentId}")
+    public String deleteOne(@PathVariable(name = "studentId") Integer studentId) {
+        StudentEntity studentEntity = studentRepository.findOneById(studentId);
+        if (studentEntity == null) {
+            System.out.println("Student with ID " + studentId + " is not existed");
+            return null;
+        }
+        studentRepository.delete(studentEntity);
+        return "DONE";
+    }
     @GetMapping(value = "/query/{studentId}")
     public StudentEntity findStudentById(@PathVariable(name = "studentId") Integer id){
         StudentEntity st1 = studentRepository.findStudentByIdNativeIndexed(id);
-        Object[] st2 = studentRepository.findStudentByIdNativeIndexed2(id);
+        List<Object[]> st2 = studentRepository.findStudentByIdNativeIndexed2(id);
+        Object[] item1 = st2.get(0);
+        String name = String.valueOf(item1[0]);
+        Integer age = (int)item1[1];
+        System.out.println(name + ":" + age);
         StudentEntity st3 = studentRepository.findStudentByIdJPQL(id);
 
         StudentEntity st4 = studentRepository.findStudentByIdNativeNamed(id);
@@ -96,11 +112,25 @@ public class StudentController {
         return null;
     }
 
-    @GetMapping(value = "/test")
+    @GetMapping(value = "/update-with-transaction")
     public String changeStudentError(){
         return studentService.changeStudentError(1);
     }
 
+    @GetMapping(value = "/findAll/{age}")
+    public List<StudentEntity> findAll(@PathVariable(name = "age") Integer age,
+                                       @RequestParam(name = "page") Integer pageNum,
+                                       @RequestParam(name = "size") Integer pageSize,
+                                       @RequestParam(name = "sortBy") String sortBy,
+                                       @RequestParam(name = "orderBy") String orderBy){
+        Sort sort = Sort.by(Sort.Direction.ASC, sortBy);
+        if(orderBy.equals("DESC")) {
+            sort = Sort.by(Sort.Direction.DESC, sortBy);
+        }
+        PageRequest pageRequest = PageRequest.of(pageNum, pageSize, sort);
+        List<StudentEntity> response = studentRepository.findAllByAge(age, pageRequest);
+        return response;
+    }
 
     /*Connection getConnection(){
         if(connection == null){

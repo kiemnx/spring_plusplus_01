@@ -1,5 +1,6 @@
 package vn.plusplus.spring.springbootdemo.repository;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,6 +13,8 @@ import java.util.List;
 
 @Repository
 public interface StudentRepository extends JpaRepository<StudentEntity, Integer> {
+
+    List<StudentEntity> findAllByAge(Integer age, Pageable pageable);
     List<StudentEntity> findAllByStudentIdNumber(String id);
     List<StudentEntity> findAllByAge(Integer age);
     List<StudentEntity> findAllByStudentName(String name);
@@ -24,22 +27,23 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
     @Query(nativeQuery = true, value = "SELECT * FROM student WHERE id=?1")
     StudentEntity findStudentByIdNativeIndexed(Integer id);
 
+    //Query with native query return an entity, Named Parameters
+    @Query(nativeQuery = true, value = "SELECT * FROM student WHERE id=:Id")
+    StudentEntity findStudentByIdNativeNamed(@Param("Id") Integer id);
+
+
     //Query with native query return an array object, Indexed Query Parameters
     @Query(nativeQuery = true, value = "SELECT name, age FROM student WHERE id=?1")
-    Object[] findStudentByIdNativeIndexed2(Integer id);
+    List<Object[]> findStudentByIdNativeIndexed2(Integer id);
 
     //Query with JPQL, Indexed Query Parameters
     @Query(value = "SELECT st FROM StudentEntity st WHERE id=?1")
     StudentEntity findStudentByIdJPQL(Integer id);
 
-
-    //Query with native query return an entity, Named Parameters
-    @Query(nativeQuery = true, value = "SELECT * FROM student WHERE id=:Id")
-    StudentEntity findStudentByIdNativeNamed(@Param("Id") Integer id);
-
     //Query with JPQL, Named Parameters
     @Query(value = "SELECT st FROM StudentEntity st WHERE id=:Id")
     StudentEntity findStudentByIdJPQLNamed(@Param("Id") Integer id);
+
 
     //Query with JPQL, Named Parameters
     @Query(value = "SELECT studentName, age FROM StudentEntity WHERE id=:Id")
@@ -57,4 +61,6 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
     @Modifying
     @Query(nativeQuery = true, value = "UPDATE student SET age = ?1 WHERE id = ?2")
     int updateUsingNativeModify(Integer age, Integer id);
+
+
 }
