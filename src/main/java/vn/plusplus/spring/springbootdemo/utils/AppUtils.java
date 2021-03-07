@@ -38,7 +38,11 @@ public class AppUtils {
     public static void main(String[] args) {
         String password = "123456";
         String encrytedPassword = encrytePassword(password);
-
         System.out.println("Encryted Password: " + encrytedPassword);
+        password = "1234567";
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        Boolean check = encoder.matches(password, encrytedPassword);
+        System.out.println("Result: " + check);
+
     }
 }

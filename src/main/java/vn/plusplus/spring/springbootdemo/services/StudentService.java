@@ -54,8 +54,11 @@ public class StudentService {
         StudentEntity st = studentRepository.findOneById(id);
         st.setStudentName("PLUSPLUS");
         studentRepository.save(st);
+
+        //
+        StudentEntity st2 = studentRepository.findOneById(5);
+        st2.setStudentName("AAAA");
+        studentRepository.save(st2);
         throw new RuntimeException("Error");
     }
-
-
 }
