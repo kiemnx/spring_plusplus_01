@@ -1,0 +1,34 @@
+@startuml
+participant Client as client
+participant Server as server
+participant Database as db
+
+group #LightYellow  Register
+client -> server: register(user,pass,role)
+server -> db: saveUserInfo(user,pass,role)
+end group
+
+group #Khaki  Login
+client -> server: login(user,pass)
+server -> db: validUser(user,pass)
+server -> server: generateStringToken()
+server -> db: saveTokenInfo (token,user,time)
+server --> client: token
+end group
+
+group #YellowGreen  Request
+client -> server: request API with token
+server -> db: validToken(token)
+server -> db: getUserRoleFromToken(token)
+server -> db: checkRoleWithAPI(api,role)
+
+note over server
+    if token not valid or role not accept
+    return client access denied
+end note
+
+server -> server: execute request from client
+server --> client: data response
+end group
+
+@enduml
