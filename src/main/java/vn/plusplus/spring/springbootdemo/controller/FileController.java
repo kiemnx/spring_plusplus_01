@@ -15,8 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 import vn.plusplus.spring.springbootdemo.services.FileService;
 
 
-@RestController
-@RequestMapping(value = "/file")
+//@RestController
+//@RequestMapping(value = "/")
 public class FileController {
 
     @Autowired

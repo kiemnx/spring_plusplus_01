@@ -28,7 +28,7 @@ public class StudentController {
 
     @GetMapping(value = "/{age}")
     public List<StudentEntity> findStudent(@PathVariable(name = "age") Integer age) throws Exception{
-        logger.info("Received request get all student with age = [{}]", age);
+        logger.info("Received request get all student with age = {}, {}", age, 1);
         List<StudentEntity> response = new ArrayList<>();
         try {
             response = studentRepository.findAllByAge(age);
