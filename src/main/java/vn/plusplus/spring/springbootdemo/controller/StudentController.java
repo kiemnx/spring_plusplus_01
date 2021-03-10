@@ -1,5 +1,7 @@
 package vn.plusplus.spring.springbootdemo.controller;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -18,18 +20,22 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/student")
 public class StudentController {
-
+    private static final Logger logger = LogManager.getLogger(FileController.class);
     @Autowired
     StudentService studentService;
     @Autowired
     StudentRepository studentRepository;
 
-
-    Connection connection;
-
     @GetMapping(value = "/{age}")
     public List<StudentEntity> findStudent(@PathVariable(name = "age") Integer age) throws Exception{
-        List<StudentEntity> response = studentRepository.findAllByAge(age);
+        logger.info("Received request get all student with age = [{}]", age);
+        List<StudentEntity> response = new ArrayList<>();
+        try {
+            response = studentRepository.findAllByAge(age);
+            logger.info("Found [{}] students with age [{}]", response.size(), age);
+        }catch (Exception e){
+            logger.error("Error happened: {}", e);
+        }
         return response;
     }
 
@@ -106,9 +112,9 @@ public class StudentController {
     }
 
     @GetMapping(value = "/update/{studentId}")
-    public StudentEntity updateStudentById(@PathVariable(name = "studentId") Integer id){
-        studentRepository.updateUsingJPQLModify(45, id);
-        studentRepository.updateUsingNativeModify(22, id);
+    public StudentEntity updateStudentById(@PathVariable(name = "studentId") String id){
+        studentRepository.updateUsingJPQLModify(45, Integer.valueOf(id));
+        studentRepository.updateUsingNativeModify(22, Integer.valueOf(id));
         return null;
     }
 
@@ -122,7 +128,7 @@ public class StudentController {
                                        @RequestParam(name = "page") Integer pageNum,
                                        @RequestParam(name = "size") Integer pageSize,
                                        @RequestParam(name = "sortBy") String sortBy,
-                                       @RequestParam(name = "orderBy") String orderBy){
+                                       @RequestParam(name = "orderBy",required = false) String orderBy){
         Sort sort = Sort.by(Sort.Direction.ASC, sortBy);
         if(orderBy.equals("DESC")) {
             sort = Sort.by(Sort.Direction.DESC, sortBy);
