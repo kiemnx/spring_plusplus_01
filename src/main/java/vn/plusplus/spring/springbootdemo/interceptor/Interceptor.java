@@ -14,8 +14,9 @@ public class Interceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request,  HttpServletResponse response, Object handler) throws Exception {
 
-
-
+        String token = request.getHeader("token");
+        String path = request.getContextPath();
+        String method = request.getMethod();
         return true;
     }
 
