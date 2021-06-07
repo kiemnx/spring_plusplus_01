@@ -1,0 +1,29 @@
+@startuml
+participant client
+participant BookController as bcontroler
+participant BookService as bservice
+participant Database as db
+note left client
+    method: POST
+    url: /book_store/user_store/addBook
+    Body:
+        title, quantity, author
+        avatar, publicDate..
+end note
+client -> bcontroler: addNewBook()
+activate bcontroler
+bcontroler -> bservice: verifyInput(title, quantity..)
+activate bservice
+bservice --> bcontroler: ok
+deactivate bservice
+bcontroler -> bservice: insertNewBook(user, bookinfo)
+activate bservice
+bservice -> db: executeSQL insert
+activate db
+db --> bservice: entity
+deactivate db
+bservice --> bcontroler: entity
+deactivate bservice
+bcontroler -->client: entity
+deactivate bcontroler
+@enduml

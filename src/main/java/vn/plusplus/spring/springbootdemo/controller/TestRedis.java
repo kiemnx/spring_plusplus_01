@@ -18,17 +18,18 @@ public class TestRedis {
 
     @GetMapping(value = "/add-new-key/{id}")
     public String addNewKey(@PathVariable(name = "id")String id){
-        String key = "token:user" + id;
-        String value = UUID.randomUUID().toString();
+        String value = "user" + id;
+        String key = UUID.randomUUID().toString();
         System.out.println("Add new key: " + value);
         redisTemplate.opsForValue().set(key, value);
         return "OK";
     }
 
-    @GetMapping(value = "/get-key/{id}")
-    public String getKey(@PathVariable(name = "id")String id){
-        String key = "token:user" + id;
-        String value = (String) redisTemplate.opsForValue().get(key);
+    @GetMapping(value = "/get-key/{token}")
+    public String getKey(@PathVariable(name = "token")String token){
+        System.out.println("Start time: " + System.currentTimeMillis());
+        String value = (String) redisTemplate.opsForValue().get(token);
+        System.out.println("End time: " + System.currentTimeMillis());
         return value;
     }
 }

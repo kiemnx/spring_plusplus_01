@@ -19,6 +19,9 @@ public class TokenEntity {
     @Column(name = "user_name")
     private String userName;
 
+    @Column(name = "user_id")
+    private Integer userId;
+
     @Column(name = "user_token")
     private String token;
 
